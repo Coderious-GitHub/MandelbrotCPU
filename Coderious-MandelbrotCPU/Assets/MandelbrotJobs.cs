@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using Unity.Jobs;
+using Unity.Burst;
 using Unity.Collections;
 
 public class MandelbrotJobs : MonoBehaviour
@@ -19,6 +20,7 @@ public class MandelbrotJobs : MonoBehaviour
 
 	Color32[] colors;
 
+	[BurstCompile]
 	struct Mandelbrot : IJobParallelFor
     {
 		public NativeArray<double> x;
@@ -55,6 +57,7 @@ public class MandelbrotJobs : MonoBehaviour
 		}
     }
 
+	[BurstCompile]
 	struct SetColor : IJobParallelFor
     {
 		public NativeArray<int> value;
@@ -225,6 +228,15 @@ public class MandelbrotJobs : MonoBehaviour
 			height -= hFactor;
 			rStart += wFactor / 2.0;
 			iStart += hFactor / 2.0;
+
+			if (Input.mouseScrollDelta.y > 0)
+            {
+				maxIterations += 3;
+			}
+            else
+            {
+				maxIterations -= 3;
+            }
 
 			RunMandelbrot();
 		}
